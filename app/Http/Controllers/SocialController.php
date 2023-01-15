@@ -6,6 +6,8 @@ use Laravel\Socialite\Facades\Socialite;
 use Validator;
 use Exception;
 use Auth;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
+
 class SocialController extends Controller
 {
     public function facebookRedirect()
@@ -20,7 +22,7 @@ class SocialController extends Controller
             $isUser = User::where('fb_id', $user->id)->first();
      
             if($isUser){
-                Auth::login($isUser);
+                FacadesAuth::login($isUser);
                 return redirect('/dashboard');
             }else{
                 $createUser = User::create([
@@ -30,12 +32,12 @@ class SocialController extends Controller
                     'password' => encrypt('admin@123')
                 ]);
     
-                Auth::login($createUser);
+                FacadesAuth::login($createUser);
                 return redirect('/dashboard');
             }
     
         } catch (Exception $exception) {
-            dd($exception->getMessage());
+            dd('We have a problem...' . $exception);
         }
     }
 }

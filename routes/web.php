@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SocialController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -14,6 +15,8 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('auth/facebook', [SocialController::class, 'facebookRedirect']);
+Route::get('auth/facebook/callback', [SocialController::class, 'loginWithFacebook']);
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -32,4 +35,13 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+    Route::get('/posts', function () {
+        return Inertia::render('Posts');
+    })->name('posts');
+     Route::get('/reddit-scrapper', function () {
+        return Inertia::render('RedditScrapper');
+    })->name('reddit-scrapper');
+     Route::get('/instagram-uploader', function () {
+        return Inertia::render('InstagramUploader');
+    })->name('instagram-uploader');
 });
