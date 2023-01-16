@@ -74,4 +74,10 @@ class InstagramTool
         return $result;
     }
 
+    public static function generateCaption(string $caption, int $numberOfHastags = 20): string
+    {
+        $hashtags = static::generateHashtags($numberOfHastags);
+        return $caption . " " . $hashtags;
+    }
+
 }

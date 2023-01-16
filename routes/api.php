@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\InstagramController;
 use App\Http\Controllers\JobsController;
 use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
@@ -35,5 +36,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/posts/{id}', [PostController::class, 'update']);
 
 //instagram
-    Route::post('/get-instagram-auth-data', [Controller::class, 'getInstagramAuthData']);
+    Route::post('/posts/upload', [InstagramController::class, 'postInstagramMedia']);
 });

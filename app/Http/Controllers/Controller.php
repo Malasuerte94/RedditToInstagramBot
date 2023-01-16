@@ -13,15 +13,4 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function getInstagramAuthData()
-    {
-        $user = auth()->user();
-        if ($user) {
-            $instagramService = new InstagramService($user);
-        }
-        
-        return response()->json([
-            'message' => 'Instagram data refreshed',
-        ]);
-    }
 }

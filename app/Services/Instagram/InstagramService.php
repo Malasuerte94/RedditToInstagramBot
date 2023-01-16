@@ -1,118 +1,35 @@
 <?php
 
 namespace App\Services\Instagram;
-use App\Models\post;
+use App\Models\Post;
 use App\Models\User;
-use App\Services\Instagram\InstagramTool;
 use GuzzleHttp\Client;
-use ValueError;
 
 class InstagramService
 {
     public $client;
     public $secret;
-    public $user;
 
-    public function __construct(User $user)
+    public function __construct()
     {
         $this->client = config('instagram.instagram_id');
         $this->secret = config('instagram.instagram_secret');
-        $this->user = $user;    
-        $this->init();    
     }
 
-    public function init()
+    public function checkUserFbData()
     {
-        if($this->user->token == null) {
-            $this->user->token = $this->getToken();
-            $this->user->save();
+        /** @var User $user */
+        $user = auth()->user();
+
+        if ($user->account_id == null) {
+            $user->account_id = $this->getAccountId();
+            $user->save();
         }
-        if($this->user->account_id == null) {
-            return ($this->getTokenLong());
-            $this->user->account_id = $this->getAccountId();
-            $this->user->save();
-        }
-        if($this->user->page_id == null) {
-            $this->user->page_id = $this->getIgBusinessAccountId();
-            $this->user->save();
+        if ($user->business_id == null) {
+            $user->business_id = $this->getIgBusinessAccountId();
+            $user->save();
         }
     }
-
-
-         /**
-     * Get the instagram access token
-     * @return string
-     */
-    public function getToken(): string
-    {
-        $client = new Client();
-        $response = $client->get('https://graph.facebook.com/oauth/access_token', [
-            'query' => [
-                'client_id' => $this->client,
-                'client_secret' => $this->secret,
-                'grant_type' => 'client_credentials',
-            ],
-        ]);
-
-        $responseBody = json_decode($response->getBody(), true);
-
-        if (!isset($responseBody['access_token'])) {
-            throw new \Exception('Failed to get access token');
-        }
-
-        return $responseBody['access_token'];
-    }
-
-     /**
-     * Get the fb long lived access token
-     * @return string
-     */
-    public function getTokenLong(): string
-    {
-        $client = new Client();
-        $response = $client->get('https://graph.facebook.com/oauth/access_token', [
-            'query' => [
-                'grant_type' => 'fb_exchange_token',
-                'client_id' => $this->client,
-                'client_secret' => $this->secret,
-                'fb_exchange_token' => $this->user->token,
-            ],
-        ]);
-
-        $responseBody = json_decode($response->getBody(), true);
-
-        if (!isset($responseBody['access_token'])) {
-            throw new \Exception('Failed to get access token');
-        }
-
-        return $responseBody['access_token'];
-    }
-    
-
-    //  /**
-    //  * Get the instagram access token
-    //  * @return string
-    //  */
-    // public function getToken(): string
-    // {
-    //     $client = new Client();
-    //     $response = $client->get('https://graph.facebook.com/oauth/access_token', [
-    //         'query' => [
-    //             'client_id' => $this->client,
-    //             'client_secret' => $this->secret,
-    //             'grant_type' => 'client_credentials',
-    //         ],
-    //     ]);
-
-    //     $responseBody = json_decode($response->getBody(), true);
-
-    //     if (!isset($responseBody['access_token'])) {
-    //         throw new \Exception('Failed to get access token');
-    //     }
-
-    //     return $responseBody['access_token'];
-    // }
-    
 
     /**
      * Connecting to the server and retrieving the instagram page id
@@ -120,10 +37,11 @@ class InstagramService
      */
     public function getAccountId(): string
     {
+        $user = auth()->user();
         $client = new Client();
         $response = $client->get('https://graph.facebook.com/v15.0/me/accounts', [
             'query' => [
-                'access_token' => $this->user->token,
+                'access_token' => $user->token,
             ],
         ]);
         $json_response = json_decode($response->getBody(), true);
@@ -143,23 +61,95 @@ class InstagramService
      */
     public function getIgBusinessAccountId(): string
     {
+        $user = auth()->user();
         $client = new Client();
-        $response = $client->get('https://graph.facebook.com/v15.0/'.$this->user->account_id, [
+        $response = $client->get('https://graph.facebook.com/v15.0/' . $user->account_id, [
             'query' => [
                 'fields' => 'instagram_business_account',
-                'access_token' => $this->user->token,
+                'access_token' => $user->token,
             ],
         ]);
         $json_response = json_decode($response->getBody(), true);
 
-  
         if (isset($json_response['instagram_business_account'])) {
             return $json_response['instagram_business_account']['id'];
         } else {
             throw new \Exception('Business page ID account not found.');
         }
-    
     }
 
+    /**
+     * @param Post $post
+     * @return string
+     */
+    public function uploadMedia(Post $post): string
+    {
+        $client = new Client();
+        $user = auth()->user();
+        $this->checkUserFbData();
 
+        $response = $client->post('https://graph.facebook.com/v15.0/' . $user->business_id . '/media', [
+            'query' => [
+                'image_url' => $post->image_url,
+                'caption' => $post->hashtags,
+                'access_token' => $user->token,
+            ],
+        ]);
+        $json_response = json_decode($response->getBody(), true);
+
+        if (isset($json_response['id'])) {
+            $post->ig_upload_id = $json_response['id'];
+            $post->save();
+            return $json_response['id'];
+        } else {
+            throw new \Exception('Error uploading media.');
+        }
+    }
+
+    /**
+     * @param Post $post
+     * @return string
+     */
+    public function publishMedia(Post $post): string
+    {
+        $client = new Client();
+        $user = auth()->user();
+        $this->checkUserFbData();
+
+        $response = $client->post('https://graph.facebook.com/v15.0/' . $user->business_id . '/media_publish', [
+            'query' => [
+                'creation_id' => $post->ig_upload_id,
+                'access_token' => $user->token,
+            ],
+        ]);
+        $json_response = json_decode($response->getBody(), true);
+
+        if (isset($json_response['id'])) {
+            $post->posted = 1;
+            $post->save();
+            return $json_response['id'];
+        } else {
+            throw new \Exception('Error uploading media.');
+        }
+    }
+
+    /**
+     * @param Post $post
+     * @return string
+     */
+    public function uploadPostToInstagram(Post $post)
+    {
+        $uploadMedia = $this->uploadMedia($post);
+        if ($uploadMedia) {
+            $publishMedia = $this->publishMedia($post);
+        }
+        if ($publishMedia) {
+            return response()->json([
+                'message' => 'Instagram post uploaded & published',
+            ]);
+        }
+        return response()->json([
+            'message' => 'Instagram post NOT uploaded & published',
+        ]);
+    }
 }

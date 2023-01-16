@@ -23,12 +23,15 @@ class SocialController extends Controller
      
             if($isUser){
                 FacadesAuth::login($isUser);
+                $isUser->token = $user->token;
+                $isUser->save();
                 return redirect('/dashboard');
             }else{
                 $createUser = User::create([
                     'name' => $user->name,
                     'email' => $user->email,
                     'fb_id' => $user->id,
+                    'token' => $user->token,
                     'password' => encrypt('admin@123')
                 ]);
     
