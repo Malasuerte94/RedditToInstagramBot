@@ -28,8 +28,8 @@ class DispatchReddit extends Command
      */
     public function handle()
     {
-        $redditScrapper = new RedditService();
-        $redditScrapper->getLatestPosts();
+        $redditScraper = new RedditService();
+        $redditScraper->getLatestPosts();
         return Command::SUCCESS;
     }
 }

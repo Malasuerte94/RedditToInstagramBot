@@ -28,15 +28,19 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
+    
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
     Route::get('/posts', function () {
         return Inertia::render('Posts');
     })->name('posts');
-    Route::get('/reddit-scrapper', function () {
-        return Inertia::render('RedditScrapper');
-    })->name('reddit-scrapper');
+
+    Route::get('/reddit-scraper', function () {
+        return Inertia::render('RedditScraper');
+    })->name('reddit-scraper');
+
     Route::get('/instagram-uploader', function () {
         return Inertia::render('InstagramUploader');
     })->name('instagram-uploader');

@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\HashtagController;
+use App\Http\Controllers\IgAccountController;
 use App\Http\Controllers\InstagramController;
-use App\Http\Controllers\JobsController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\RedditScraperController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +36,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/posts/{id}', [PostController::class, 'destroy']);
     Route::patch('/posts/{id}', [PostController::class, 'update']);
 
-//instagram
+    //instagram accounts
+    Route::get('/ig-accounts', [IgAccountController::class, 'index']);
+    Route::post('/ig-accounts/connect', [IgAccountController::class, 'create']);
+
+    //hashtags
+    Route::get('/hashtags', [HashtagController::class, 'index']);
+    Route::post('/hashtags', [HashtagController::class, 'store']);
+
+    //upload manualy to instagram
     Route::post('/posts/upload', [InstagramController::class, 'postInstagramMedia']);
+
+    //reddit scraper
+    Route::get('/reddit-scrapers', [RedditScraperController::class, 'index']);
+    Route::post('/reddit-scrapers', [RedditScraperController::class, 'store']);
 });

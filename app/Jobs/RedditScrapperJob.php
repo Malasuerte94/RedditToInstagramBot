@@ -31,7 +31,7 @@ class RedditScrapperJob implements ShouldQueue
      */
     public function handle()
     {
-        $redditScrapper = new RedditService();
-        $redditScrapper->getLatestPosts();
+        $redditScraper = new RedditService();
+        $redditScraper->getLatestPosts();
     }
 }

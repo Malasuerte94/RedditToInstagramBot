@@ -16,26 +16,11 @@ class InstagramService
         $this->secret = config('instagram.instagram_secret');
     }
 
-    public function checkUserFbData()
-    {
-        /** @var User $user */
-        $user = auth()->user();
-
-        if ($user->account_id == null) {
-            $user->account_id = $this->getAccountId();
-            $user->save();
-        }
-        if ($user->business_id == null) {
-            $user->business_id = $this->getIgBusinessAccountId();
-            $user->save();
-        }
-    }
-
     /**
      * Connecting to the server and retrieving the instagram page id
-     * @return string
+     * @return array
      */
-    public function getAccountId(): string
+    public function getAccountId(): array
     {
         $user = auth()->user();
         $client = new Client();
@@ -47,7 +32,10 @@ class InstagramService
         $json_response = json_decode($response->getBody(), true);
         foreach ($json_response['data'] as $account) {
             if (isset($account['id'])) {
-                return $account['id'];
+                return [
+                    'id' => $account['id'],
+                    'username' => $account['name'],
+                ];
             } else {
                 throw new \Exception('Account page ID account not found.');
             }
@@ -59,11 +47,11 @@ class InstagramService
      * Connecting to the server and retrieving the instagram business account id
      * @return string
      */
-    public function getIgBusinessAccountId(): string
+    public function getIgBusinessAccountId($accountId): string
     {
         $user = auth()->user();
         $client = new Client();
-        $response = $client->get('https://graph.facebook.com/v15.0/' . $user->account_id, [
+        $response = $client->get('https://graph.facebook.com/v15.0/' . $accountId, [
             'query' => [
                 'fields' => 'instagram_business_account',
                 'access_token' => $user->token,
@@ -86,9 +74,8 @@ class InstagramService
     {
         $client = new Client();
         $user = auth()->user();
-        $this->checkUserFbData();
 
-        $response = $client->post('https://graph.facebook.com/v15.0/' . $user->business_id . '/media', [
+        $response = $client->post('https://graph.facebook.com/v15.0/' . $post->igAccount->business_id . '/media', [
             'query' => [
                 'image_url' => $post->image_url,
                 'caption' => $post->hashtags,
@@ -114,9 +101,8 @@ class InstagramService
     {
         $client = new Client();
         $user = auth()->user();
-        $this->checkUserFbData();
 
-        $response = $client->post('https://graph.facebook.com/v15.0/' . $user->business_id . '/media_publish', [
+        $response = $client->post('https://graph.facebook.com/v15.0/' . $post->igAccount->business_id . '/media_publish', [
             'query' => [
                 'creation_id' => $post->ig_upload_id,
                 'access_token' => $user->token,
