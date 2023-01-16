@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('posts', function (Blueprint $table) {
-            $table->text('hashtags')->after('author')->nullable();
+        Schema::table('users', function (Blueprint $table) {
+            $table->text('token')->after('fb_id')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('posts', function (Blueprint $table) {
-            $table->dropColumn('hashtags');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('token');
         });
     }
 };

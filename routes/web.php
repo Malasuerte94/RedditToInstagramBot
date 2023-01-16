@@ -27,21 +27,17 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
     Route::get('/posts', function () {
         return Inertia::render('Posts');
     })->name('posts');
-     Route::get('/reddit-scrapper', function () {
+    Route::get('/reddit-scrapper', function () {
         return Inertia::render('RedditScrapper');
     })->name('reddit-scrapper');
-     Route::get('/instagram-uploader', function () {
+    Route::get('/instagram-uploader', function () {
         return Inertia::render('InstagramUploader');
     })->name('instagram-uploader');
 });

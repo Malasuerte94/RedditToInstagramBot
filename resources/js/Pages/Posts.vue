@@ -7,7 +7,7 @@ import Welcome from '@/Components/Welcome.vue';
     <AppLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Posts
+                Posts {{this.$page.props.csrf_token }}
             </h2>
         </template>
 
@@ -15,11 +15,11 @@ import Welcome from '@/Components/Welcome.vue';
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <template v-if="posts.length > 0">
-                        <div class="p-4 overflow-auto">
-                            <div
-                                class="w-full hover:grid-flow-row grid-flow-row-dense overflow-auto gap-4 columns-2 md:columns-3 lg:columns-4">
+                        <div class="p-4">
+                            <div class="masonry-with-flex">
                                 <div v-for="post in posts" :key="post.id"
-                                    class="mb-4 max-w-sm bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
+                                    class="masonry-cell bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
+                                    <div class="item">
                                     <img class="rounded-t-lg" :src="post.image_url" alt="" />
                                     <div class="p-5">
                                         <a href="#">
@@ -56,6 +56,7 @@ import Welcome from '@/Components/Welcome.vue';
                                                 </button>
                                             </div>
                                         </div>
+                                    </div>
                                     </div>
                                 </div>
                             </div>
@@ -139,3 +140,17 @@ export default {
     },
 };
 </script>
+<style lang="scss" scoped>
+.masonry-with-flex {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-gap: 1px;
+    grid-auto-rows: minmax(280px, auto);
+    grid-auto-flow: dense;
+    padding: 1px;
+  .item {
+   padding: 1rem;
+  } 
+}
+
+</style>

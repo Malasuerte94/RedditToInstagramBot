@@ -26,7 +26,7 @@ class RedditService
      */
     public function getLatestPosts(): void
     {
-        $url = 'https://www.reddit.com/r/' . $this->subReddit . '/top/.json?limit=10';
+        $url = 'https://www.reddit.com/r/' . $this->subReddit . '/hot/.json?limit=50';
         $options = [
             'http' => [
                 'header' =>
@@ -40,13 +40,16 @@ class RedditService
         $posts = json_decode($response, true)['data']['children'];
 
         foreach ($posts as $post) {
-               $data = [
+            $file_extension = pathinfo($post['data']['url'], PATHINFO_EXTENSION);
+            if(in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) {
+                $data = [
                     'subreddit' => $this->subReddit,
                     'image_url' => $post['data']['url'],
                     'author' => $post['data']['author'],
                     'hashtags' => InstagramTool::generateHashtags(20),
                 ];
-                Post::create($data);
+                Post::firstOrCreate(['author' => $data['author'],'image_url' => $data['image_url']], $data);
+            }
         }
     }
 }

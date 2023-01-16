@@ -3,7 +3,7 @@ namespace App\Services\Instagram;
 
 class InstagramTool
 {
-    public array $hashtags = [
+    public static $hashtags = [
         '#mechanicalkeyboard',
         '#mechanicalkeyboards',
         '#mechanicalkeyboardindonesia',
@@ -65,9 +65,13 @@ class InstagramTool
 
     public static function generateHashtags(int $numberOfHastags = 20): string
     {
+        if($numberOfHastags<=0){
+            return "";
+        }
         $randomHashtags = array_rand(static::$hashtags, $numberOfHastags);
         $randomHashtags = array_intersect_key(static::$hashtags, array_flip($randomHashtags));
         $result = implode(" ", $randomHashtags);
         return $result;
     }
+
 }
