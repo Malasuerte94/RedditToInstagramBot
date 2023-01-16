@@ -18,13 +18,8 @@ class RedditScraperController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        $redditScrapers = collect();
-        $igAccounts = $user->igAccounts;
-
-        foreach ($igAccounts as $igAccount) {
-            $redditScrapers[] = RedditScraperCollection::collection($igAccount->redditScrapers);
-        }
-
+        $redditScrapers = RedditScraperCollection::collection($user->redditScrapers);
+        
         return response()->json([
             'data' => $redditScrapers
         ], 200);
@@ -50,16 +45,15 @@ class RedditScraperController extends Controller
     {
         $validated = $request->validate([
             'subreddit' => 'required|string',
-            'ig_account_id' => 'required|int',
             'filter_by' => 'required|string',
             'time_filter' => 'required|string',
             'limit_posts' => 'required|int|max:100|min:1',
         ]);
 
-        $redditScraper = RedditScraper::create(
+        RedditScraper::create(
             [
                 'subreddit' => $validated['subreddit'],
-                'ig_account_id' => $validated['ig_account_id'],
+                'user_id' => auth()->user()->id,
                 'filter_by' => $validated['filter_by'],
                 'time_filter' => $validated['time_filter'],
                 'limit' => $validated['limit_posts'],

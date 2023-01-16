@@ -4,6 +4,7 @@ use App\Http\Controllers\HashtagController;
 use App\Http\Controllers\IgAccountController;
 use App\Http\Controllers\InstagramController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\RedditAutomationController;
 use App\Http\Controllers\RedditScraperController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -50,4 +51,10 @@ Route::middleware('auth:sanctum')->group(function () {
     //reddit scraper
     Route::get('/reddit-scrapers', [RedditScraperController::class, 'index']);
     Route::post('/reddit-scrapers', [RedditScraperController::class, 'store']);
+
+    //reddit automation
+    Route::get('/reddit-automation', [RedditAutomationController::class, 'index']);
+    Route::post('/reddit-automation', [RedditAutomationController::class, 'store']);
+    Route::delete('/reddit-automation', [RedditAutomationController::class, 'destroy']);
+
 });

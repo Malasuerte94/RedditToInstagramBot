@@ -13,12 +13,19 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('hashtags', function (Blueprint $table) {
+        Schema::create('reddit_automations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->text('hashtags');
+            $table->unsignedBigInteger('ig_account_id');
+            $table->unsignedBigInteger('reddit_scraper_id');
+            $table->unsignedBigInteger('hashtag_id');
+            $table->boolean('active')->default(false);
             $table->timestamps();
+
             $table->index('user_id');
+            $table->index('ig_account_id');
+            $table->index('reddit_scraper_id');
+            $table->index('hashtag_id');
         });
     }
 
@@ -29,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hashtags');
+        Schema::dropIfExists('reddit_automations');
     }
 };

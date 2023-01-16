@@ -15,13 +15,13 @@ return new class extends Migration
     {
         Schema::create('reddit_scrapers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('ig_account_id');
+            $table->unsignedBigInteger('user_id');
             $table->string('subreddit');
             $table->enum('filter_by', ['hot', 'new', 'random', 'top', 'controversial']);
             $table->enum('time_filter', ['hour', 'day', 'week', 'month', 'year', 'all']);
             $table->string('limit')->default(10);
             $table->timestamps();
-            $table->index('ig_account_id');
+            $table->index('user_id');
         });
     }
 

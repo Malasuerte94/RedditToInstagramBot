@@ -63,4 +63,19 @@ class User extends Authenticatable
         return $this->hasMany(IgAccount::class);
     }
 
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
+    }
+    
+    public function hashtags(): HasMany
+    {
+        return $this->hasMany(Hashtag::class);
+    }
+    public function redditScrapers(): HasMany
+    {
+        return $this->hasMany(RedditScraper::class);
+    }
+
+
 }

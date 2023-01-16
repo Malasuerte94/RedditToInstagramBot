@@ -17,8 +17,6 @@ class RedditScraperCollection extends JsonResource
         return [
             'id' => $this->id,
             'subreddit' => $this->subreddit,
-            'ig_account_id' => $this->ig_account_id,
-            'ig_username' => $this->igAccount->username,
             'filter_by' => $this->filter_by,
             'time_filter' => $this->time_filter,
             'limit' => $this->limit,

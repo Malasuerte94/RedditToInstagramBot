@@ -24,15 +24,57 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
                                 d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
                         </svg>
                         <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold">
-                            Reddit Scraper
+                            Reddit Automation
                         </div>
                     </div>
 
-                    <div class="ml-12">
-                        <div class="mt-2 text-sm text-gray-500">
-                            Laravel has wonderful documentation covering every aspect of the framework. Whether you're
-                            new to the framework or have previous experience, we recommend reading all of the
-                            documentation from beginning to end.
+                    <div class="mt-5">
+                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg p-5">
+                            <form v-if="igAccounts && hashtags && redditScrapers">
+                                <div class="grid gap-6 mb-6 md:grid-cols-2">
+                                    <div>
+                                        <label for="ig_account_id"
+                                            class="block mb-2 text-sm font-medium text-black-900 text-black">Instagram</label>
+                                        <select v-model="newRedditAutomation.ig_account_id" required id="ig_account_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                            <option value="null" selected>Choose an account</option>
+                                            <template v-for="account in igAccounts" :key="account.id">
+                                                <option :value="account.id">{{ account.username }}</option>
+                                            </template>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="reddit_scraper_id"
+                                            class="block mb-2 text-sm font-medium text-black-900 text-black">Subreddit</label>
+                                        <select v-model="newRedditAutomation.reddit_scraper_id" required id="reddit_scraper_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                            <option value="null" selected>Subreddit</option>
+                                            <template v-for="redditScraper in redditScrapers" :key="redditScraper.id">
+                                                <option :value="redditScraper.id">{{ redditScraper.subreddit }}</option>
+                                            </template>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="grid gap-6 mb-6 md:grid-cols-2">
+                                    <div>
+                                        <label for="hashtag_id"
+                                            class="block mb-2 text-sm font-medium text-black-900 text-black">Hashtags</label>
+                                        <select v-model="newRedditAutomation.hashtag_id" required id="hashtag_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                            <option value="null" selected>Hashtag collection</option>
+                                            <template v-for="hashtag in hashtags" :key="hashtag.id">
+                                                <option :value="hashtag.id">{{ hashtag.name }}</option>
+                                            </template>
+                                        </select>
+                                    </div>
+                                    <div class="flex self-end"><button
+                                            @click="addNewRedditScrapper" type="button"
+                                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                                    </div>
+                                </div>
+                                <div v-if="errors">
+                                    <div v-for="error in errors" :key="error" class="text-red-500 text-sm">{{
+                                        error[0]
+                                    }}</div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -60,3 +102,63 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
         </div>
     </div>
 </template>
+<script>
+import axios from 'axios';
+export default {
+    data() {
+        return {
+            loading: true,
+            newRedditAutomation: {
+                ig_account_id: null,
+                reddit_scraper_id: null,
+                hashtag_id: null,
+            },
+            igAccounts: [],
+            redditScrapers: [],
+            hashtags: [],
+            errors: [],
+        };
+    },
+    mounted() {
+        this.getRedditScrapersAccounts();
+        this.getHashtags();
+        this.getInstagramAccountsConnected();
+        this.loading = false;
+    },
+    methods: {
+        async getInstagramAccountsConnected() {
+            try {
+                const response = await axios.get('/api/ig-accounts');
+                this.igAccounts = response.data.data;
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        async getRedditScrapersAccounts() {
+            try {
+                this.loading = true;
+                const response = await axios.get('/api/reddit-scrapers');
+                this.redditScrapers = response.data.data;
+            } catch (error) {
+                console.error(error);
+            }
+            this.loading = false;
+        },
+        async getHashtags() {
+            try {
+                const response = await axios.get('/api/hashtags');
+                this.hashtags = response.data.data;
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        async addNewRedditScrapper () {
+            try {
+                await axios.post('/api/reddit-automation', this.newRedditAutomation);
+            } catch (error) {
+                this.errors = error.response.data.errors;
+            }
+        },
+    },
+};
+</script>

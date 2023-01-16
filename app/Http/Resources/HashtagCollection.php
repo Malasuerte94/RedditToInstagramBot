@@ -16,9 +16,8 @@ class HashtagCollection extends JsonResource
     {
         return [
             'id' => $this->id,
+            'name' => $this->name,
             'hashtags' => $this->hashtags,
-            'ig_account_id' => $this->ig_account_id,
-            'ig_username' => $this->igAccount->username,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

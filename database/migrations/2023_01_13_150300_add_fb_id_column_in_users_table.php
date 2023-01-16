@@ -14,7 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('fb_id')->nullable();
+            $table->string('fb_id')->after('profile_photo_path')->nullable();
+            $table->text('token')->after('fb_id')->nullable();
         });
     }
 

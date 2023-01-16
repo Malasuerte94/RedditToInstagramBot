@@ -4,21 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class RedditScraper extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
 
-    public function igAccount(): BelongsTo
+    public function posts(): BelongsToMany
     {
-        return $this->belongsTo(IgAccount::class);
+        return $this->belongsToMany(Post::class);
     }
 
-    public function posts(): HasMany
-    {
-        return $this->hasMany(Post::class);
-    }
 }

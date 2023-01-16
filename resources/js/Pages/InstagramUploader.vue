@@ -71,29 +71,22 @@ import Welcome from '@/Components/Welcome.vue';
                     <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-5">
                         Hastags
                         <form class="p-10" v-if="accounts">
-                        <div class="grid gap-6 mb-6 md:grid-cols-2">
+                        <div class="grid gap-6 mb-6 md:grid-cols-1">
                             <div>
-                                <label for="ig_account_id"
-                                    class="block mb-2 text-sm font-medium text-black-900 text-black">Ig Account</label>
-                                <select v-model="newHashtags.ig_account_id" required id="ig_account_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                    <option value="null" selected>Choose an account</option>
-                                    <template v-for="account in accounts" :key="account.id">
-                                        <option :value="account.id">{{ account.username }}</option>
-                                    </template>
-                                </select>
+                                <label for="hashtagsName"
+                                    class="block mb-2 text-sm font-medium text-black-900 text-black">Name (identifier)</label>
+                                <input v-model="newHashtagsName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" id="hashtagsName" name="hashtagsName"/>
+                            </div>
+                            <div>
+                                <label for="hashtags"
+                                    class="block mb-2 text-sm font-medium text-black-900 text-black">Hastags (with space between)</label>
+                                <textarea class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" v-model="newHashtags" name="hashtags" id="hashtags" cols="30" rows="10">
+
+                                </textarea>
                             </div>
                             <div class="flex align-items-end align-items-xl-end">
                                 <button @click="setHastags" type="button"
                             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
-                            </div>
-                        </div>
-                        <div class="grid gap-6 mb-6 md:grid-cols-1">
-                            <div>
-                                <label for="hashtags"
-                                    class="block mb-2 text-sm font-medium text-black-900 text-black">Filter by</label>
-                                <textarea class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" v-model="newHashtags.hashtags" name="hashtags" id="hashtags" cols="30" rows="10">
-
-                                </textarea>
                             </div>
                         </div>
                         <div v-if="errors">
@@ -116,7 +109,6 @@ import Welcome from '@/Components/Welcome.vue';
                                         <tr>
                                             <th scope="col" class="px-6 py-3">#</th>
                                             <th scope="col" class="px-6 py-3">Hashtags</th>
-                                            <th scope="col" class="px-6 py-3">Instagram</th>
                                             <th scope="col" class="px-6 py-3">Date Added</th>
                                         </tr>
                                     </thead>
@@ -137,7 +129,6 @@ import Welcome from '@/Components/Welcome.vue';
                                                 {{ hashtag.id }}
                                             </th>
                                             <td class="px-6 py-4">{{ hashtag.hashtags }}</td>
-                                            <td class="px-6 py-4">{{ hashtag.ig_username }}</td>
                                             <td class="px-6 py-4">{{ hashtag.created_at }}</td>
                                         </tr>
                                     </tbody>
@@ -158,10 +149,8 @@ export default {
         return {
             accounts: [],
             hashtags: [],
-            newHashtags: {
-                hashtags: '',
-                ig_account_id: null,
-            },
+            newHashtags: '',
+            newHashtagsName: '',
             errors: [],
         };
     },
@@ -195,7 +184,8 @@ export default {
         },
         async setHastags() {
             try {
-                await axios.post('/api/hashtags', this.newHashtags);
+                await axios.post('/api/hashtags', { hashtags: this.newHashtags, name: this.newHashtagsName });
+                this.getHashtags();
             } catch (error) {
                 this.errors = error.response.data.errors;
                 console.error(error);

@@ -15,11 +15,12 @@ return new class extends Migration
     {
         Schema::create('ig_accounts', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
             $table->string('username');
+            $table->text('account_id');
             $table->text('business_id');
             $table->boolean('include_author')->default(true);
             $table->string('author_prefix')->default('Author: u/');
-            $table->unsignedBigInteger('user_id');
             $table->timestamps();
 
             $table->index('user_id');

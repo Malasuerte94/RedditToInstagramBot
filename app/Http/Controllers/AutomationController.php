@@ -2,28 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\HashtagCollection;
-use App\Models\Hashtag;
-use App\Models\User;
+use App\Models\Automation;
 use Illuminate\Http\Request;
 
-class HashtagController extends Controller
+class AutomationController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(): \Illuminate\Http\JsonResponse
+    public function index()
     {
-        /** @var User $user */
-        $user = auth()->user();
-        $hashtags = HashtagCollection::collection($user->hashtags);
-
-        return response()->json([
-            'data' => $hashtags
-        ], 200);
-        
+        //
     }
 
     /**
@@ -44,27 +35,16 @@ class HashtagController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'hashtags' => 'required|string',
-            'name' => 'required|string',
-        ]);
-
-        Hashtag::create(
-            [  
-                'user_id' => auth()->user()->id,
-                'name' => $validated['name'],
-                'hashtags' => $validated['hashtags'],
-            ]
-        );
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Hashtag  $hashtag
+     * @param  \App\Models\Automation  $automation
      * @return \Illuminate\Http\Response
      */
-    public function show(Hashtag $hashtag)
+    public function show(Automation $automation)
     {
         //
     }
@@ -72,10 +52,10 @@ class HashtagController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Hashtag  $hashtag
+     * @param  \App\Models\Automation  $automation
      * @return \Illuminate\Http\Response
      */
-    public function edit(Hashtag $hashtag)
+    public function edit(Automation $automation)
     {
         //
     }
@@ -84,10 +64,10 @@ class HashtagController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Hashtag  $hashtag
+     * @param  \App\Models\Automation  $automation
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Hashtag $hashtag)
+    public function update(Request $request, Automation $automation)
     {
         //
     }
@@ -95,10 +75,10 @@ class HashtagController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Hashtag  $hashtag
+     * @param  \App\Models\Automation  $automation
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Hashtag $hashtag)
+    public function destroy(Automation $automation)
     {
         //
     }

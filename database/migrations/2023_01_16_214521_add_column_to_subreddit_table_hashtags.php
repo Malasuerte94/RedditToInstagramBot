@@ -13,9 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('account_id');
-            $table->dropColumn('business_id');
+        Schema::table('hashtags', function (Blueprint $table) {
+            $table->string('name')->after('user_id')->unique();
         });
     }
 
@@ -26,9 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->text('account_id')->nullable();
-            $table->text('business_id')->nullable();
+        Schema::table('hashtags', function (Blueprint $table) {
+            $table->dropColumn('name');
         });
     }
 };
