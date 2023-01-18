@@ -76,6 +76,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(RedditScraper::class);
     }
+    public function redditAutomations(): HasMany
+    {
+        return $this->hasMany(RedditAutomation::class);
+    }
 
+    public function instagramAutomations(): HasMany
+    {
+        return $this->hasMany(InstagramAutomation::class);
+    }
 
 }

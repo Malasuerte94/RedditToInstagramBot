@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Services\Reddit\RedditAutomationService;
+use App\Services\Instagram\InstagramAutomationService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -10,7 +10,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class RedditScrapperJob implements ShouldQueue
+class InstagramAutomationJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -31,7 +31,7 @@ class RedditScrapperJob implements ShouldQueue
      */
     public function handle()
     {
-        $redditAutomationService = new RedditAutomationService();
-        $redditAutomationService->startScrapping();
+        $instagramAutomationService = new InstagramAutomationService();
+        $instagramAutomationService->startUploading();
     }
 }

@@ -5,10 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class RedditAutomation extends Model
+class InstagramAutomation extends Model
 {
     use HasFactory;
 
@@ -27,9 +25,5 @@ class RedditAutomation extends Model
     public function igAccount(): BelongsTo
     {
         return $this->belongsTo(IgAccount::class);
-    }
-    public function hashtag(): BelongsTo
-    {
-        return $this->belongsTo(Hashtag::class);
     }
 }

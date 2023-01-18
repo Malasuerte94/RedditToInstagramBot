@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\InstagramAutomationJob;
 use App\Jobs\RedditScrapperJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -17,7 +18,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         //->hourly();
-        $schedule->job(new RedditScrapperJob)->everyFourMinutes();
+        $schedule->job(new RedditScrapperJob)->hourly();
+        $schedule->job(new InstagramAutomationJob)->hourly();
     }
 
     /**

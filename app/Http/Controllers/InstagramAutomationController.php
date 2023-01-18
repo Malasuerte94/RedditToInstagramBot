@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\RedditAutomationCollection;
-use App\Models\RedditAutomation;
-use App\Services\Reddit\RedditService;
+use App\Http\Resources\InstagramAutomationCollection;
+use App\Models\InstagramAutomation;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class RedditAutomationController extends Controller
+class InstagramAutomationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +18,7 @@ class RedditAutomationController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        $automations = RedditAutomationCollection::collection($user->redditAutomations);
+        $automations = InstagramAutomationCollection::collection($user->instagramAutomations);
 
         return response()->json([
             'data' => $automations
@@ -39,15 +39,14 @@ class RedditAutomationController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request): \Illuminate\Http\JsonResponse
     {
         $user = auth()->user();
         $validated = $request->validate([
             'ig_account_id' => 'required|int',
-            'reddit_scraper_id' => 'required|int',
-            'hashtag_id' => 'required|int',
+            'reddit_scraper_id' => 'required|int'
         ]);
 
         if($user->igAccounts->where('id', $validated['ig_account_id'])->isEmpty()) {
@@ -60,33 +59,27 @@ class RedditAutomationController extends Controller
                 'message' => 'You do not own this Reddit scraper.'
             ], 403);
         }
-        if($user->hashtags->where('id', $validated['hashtag_id'])->isEmpty()) {
-            return response()->json([
-                'message' => 'You do not own this hashtag.'
-            ], 403);
-        }
 
-        $redditAutomation = RedditAutomation::create(
+        $instagramAutomation = InstagramAutomation::create(
             [
                 'user_id' => $user->id,
                 'ig_account_id' => $validated['ig_account_id'],
-                'reddit_scraper_id' => $validated['reddit_scraper_id'],
-                'hashtag_id' => $validated['hashtag_id'],
+                'reddit_scraper_id' => $validated['reddit_scraper_id']
             ]
         );
 
         return response()->json([
-            'data' => $redditAutomation
+            'data' => $instagramAutomation
         ], 201);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\RedditAutomation  $redditAutomation
+     * @param  \App\Models\InstagramAutomation  $instagramAutomation
      * @return \Illuminate\Http\Response
      */
-    public function show(RedditAutomation $redditAutomation)
+    public function show(InstagramAutomation $instagramAutomation)
     {
         //
     }
@@ -94,10 +87,10 @@ class RedditAutomationController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\RedditAutomation  $redditAutomation
+     * @param  \App\Models\InstagramAutomation  $instagramAutomation
      * @return \Illuminate\Http\Response
      */
-    public function edit(RedditAutomation $redditAutomation)
+    public function edit(InstagramAutomation $instagramAutomation)
     {
         //
     }
@@ -106,45 +99,33 @@ class RedditAutomationController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\RedditAutomation  $redditAutomation
+     * @param  \App\Models\InstagramAutomation  $instagramAutomation
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, int $id): \Illuminate\Http\JsonResponse
     {
-        //check if reddit automation is owned by user
         $user = auth()->user();
-        if($user->redditAutomations->where('id', $id)->isEmpty()) {
+        if($user->instagramAutomations->where('id', $id)->isEmpty()) {
             return response()->json([
-                'message' => 'You do not own this Reddit automation.'
+                'message' => 'You do not own this Instagram Automation.'
             ], 403);
         }
 
-        $redditAutomation = RedditAutomation::findOrfail($id);
-        $redditAutomation->active = $request->status;
-        $redditAutomation->save();
+        $instagramAutomation = InstagramAutomation::findOrfail($id);
+        $instagramAutomation->active = $request->status;
+        $instagramAutomation->save();
 
         return response()->json(['message' => 'Done']);
-        
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\RedditAutomation  $redditAutomation
+     * @param  \App\Models\InstagramAutomation  $instagramAutomation
      * @return \Illuminate\Http\Response
      */
-    public function destroy(RedditAutomation $redditAutomation)
+    public function destroy(InstagramAutomation $instagramAutomation)
     {
         //
-    }
-
-    public function testStart(Request $request, int $id): \Illuminate\Http\JsonResponse
-    {
-        $redditAutomation = RedditAutomation::findOrfail($id);
-        
-        $redditService = new RedditService($redditAutomation);
-        $redditService->getLatestPosts();
-
-        return response()->json(['message' => 'Done']);
     }
 }

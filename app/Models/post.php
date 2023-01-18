@@ -5,27 +5,40 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
      protected $guarded = ['id']; 
 
-    public function igAccount(): HasMany
+    public function igAccount(): BelongsTo
     {
-        return $this->hasMany(IgAccount::class);
+        return $this->belongsTo(IgAccount::class);
     }
-    public function redditScraper(): HasMany
+    public function redditScraper(): BelongsTo
     {
-        return $this->hasMany(RedditScraper::class);
+        return $this->belongsTo(RedditScraper::class);
     }
-    public function hashtags(): HasMany
+    public function hashtags(): BelongsTo
     {
-        return $this->hasMany(Hashtag::class);
+        return $this->belongsTo(Hashtag::class);
     }
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+    public function instagramAutomations(): BelongsTo
+    {
+        return $this->belongsTo(InstagramAutomation::class);
+    }
+
+    public function scopeConfirmed($query)
+    {
+        $query->where('confirmed', 1);
+    }
+    public function scopeNotPosted($query)
+    {
+        $query->where('posted', 0);
     }
 }

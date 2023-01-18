@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Automation;
+use App\Models\Log;
 use Illuminate\Http\Request;
 
-class AutomationController extends Controller
+class LogController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,10 +41,10 @@ class AutomationController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Automation  $automation
+     * @param  \App\Models\Log  $log
      * @return \Illuminate\Http\Response
      */
-    public function show(Automation $automation)
+    public function show(Log $log)
     {
         //
     }
@@ -52,10 +52,10 @@ class AutomationController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Automation  $automation
+     * @param  \App\Models\Log  $log
      * @return \Illuminate\Http\Response
      */
-    public function edit(Automation $automation)
+    public function edit(Log $log)
     {
         //
     }
@@ -64,10 +64,10 @@ class AutomationController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Automation  $automation
+     * @param  \App\Models\Log  $log
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Automation $automation)
+    public function update(Request $request, Log $log)
     {
         //
     }
@@ -75,10 +75,10 @@ class AutomationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Automation  $automation
+     * @param  \App\Models\Log  $log
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Automation $automation)
+    public function destroy(Log $log)
     {
         //
     }

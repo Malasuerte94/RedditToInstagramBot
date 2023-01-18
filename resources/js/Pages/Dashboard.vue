@@ -1,6 +1,7 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import Welcome from '@/Components/Welcome.vue';
+import RedditAutomation from '@/Components/RedditAutomation.vue';
+import InstagramAutomation from '@/Components/InstagramAutomation.vue';
 </script>
 
 <template>
@@ -14,7 +15,14 @@ import Welcome from '@/Components/Welcome.vue';
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <Welcome />
+                    <RedditAutomation />
+                </div>
+            </div>
+        </div>
+        <div class="py-12">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                    <InstagramAutomation />
                 </div>
             </div>
         </div>

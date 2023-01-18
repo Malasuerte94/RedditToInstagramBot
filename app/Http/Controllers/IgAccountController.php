@@ -3,17 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\IgAccount;
+use App\Models\Log;
 use App\Models\User;
 use App\Services\Instagram\InstagramService;
+use App\Services\LogService;
 use Illuminate\Http\Request;
 
 class IgAccountController extends Controller
 {
-
-    public function __construct(protected readonly InstagramService $instagramService)
-    {
-           
-    }
+    private InstagramService $instagramService;
     /**
      * Display a listing of the resource.
      *
@@ -24,10 +22,12 @@ class IgAccountController extends Controller
         $user = auth()->user();
         $igAccounts = $user->igAccounts;
 
-        return response()->json([
-            'data' => $igAccounts
-        ], 200);
-        
+        return response()->json(
+            [
+                'data' => $igAccounts,
+            ],
+            200
+        );
     }
 
     /**
@@ -40,33 +40,60 @@ class IgAccountController extends Controller
         /** @var User $user */
         $user = auth()->user();
         $igAccounts = $user->igAccounts;
+        $accountIdAndUsername = $this->instagramService->getAccountId();
+        $igBusinessAccountId = $this->instagramService->getIgBusinessAccountId($accountIdAndUsername['id']);
 
-        if($igAccounts->isEmpty()) {
-
-            $accountIdAndUsername = $this->instagramService->getAccountId();
-            $igBusinessAccountId = $this->instagramService->getIgBusinessAccountId($accountIdAndUsername['id']);
-
-            if($igBusinessAccountId === null || $accountIdAndUsername['id'] === null) {
-                return response()->json([
-                    'message' => 'Instagram business account not found'
-                ], 400);
+        if ($igAccounts->isEmpty() || $igAccounts->where('business_id', $igBusinessAccountId)->isEmpty()) {
+            if ($igBusinessAccountId === null || $accountIdAndUsername['id'] === null) {
+                LogService::log([
+                    'type' => Log::TYPE_ERROR,
+                    'model' => IgAccountController::class,
+                    'message' => 'Instagram business account not found',
+                ]);
+                return response()->json(
+                    [
+                        'message' => 'Instagram business account not found',
+                    ],
+                    400
+                );
             }
-           
+
             $igAccount = new IgAccount();
             $igAccount->username = $accountIdAndUsername['username'];
             $igAccount->account_id = $accountIdAndUsername['id'];
             $igAccount->business_id = $igBusinessAccountId;
             $igAccount->user_id = $user->id;
             $igAccount->save();
-            return response()->json([
-                'message' => 'Account created successfully'
-            ], 200);
+
+            LogService::log([
+                'type' => Log::TYPE_SUCCESS,
+                'model' => IgAccount::class,
+                'model_id' => $igAccount->id,
+                'message' => 'Instagram account created successfully',
+                'data' => json_encode($igAccount->username),
+            ]);
+
+            return response()->json(
+                [
+                    'message' => 'Account created successfully',
+                ],
+                200
+            );
         }
 
-        return response()->json([
-            'message' => 'Account already exists'
-        ], 200);
+        LogService::log([
+            'type' => Log::TYPE_WARNING,
+            'model' => IgAccountController::class,
+            'message' => 'Account already exists',
+            'data' => json_encode($igBusinessAccountId),
+        ]);
 
+        return response()->json(
+            [
+                'message' => 'Account already exists',
+            ],
+            200
+        );
     }
 
     /**

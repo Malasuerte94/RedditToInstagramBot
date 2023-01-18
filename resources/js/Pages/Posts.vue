@@ -1,6 +1,5 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import Welcome from "@/Components/Welcome.vue";
 </script>
 
 <template>
@@ -30,28 +29,28 @@ import Welcome from "@/Components/Welcome.vue";
                                         shadow-md
                                         dark:bg-gray-800 dark:border-gray-700
                                      " :class="[uploading == post.id ? 'uploading' : '']">
-                                        <div class="item">
+                                        <div class="item flex flex-col justify-between content-between">
                                             <img class="rounded-t-lg" :src="post.image_url" alt="" />
                                             <div class="p-5">
-                                                <a href="#">
+        
                                                     <h5 class="
                                                         mb-2
-                                                        text-2xl
+                                                        text-2sm
                                                         font-bold
                                                         tracking-tight
                                                         text-gray-900
                                                         dark:text-white
                                                     ">
-                                                        {{ post.author }}
+                                                        Author: {{ post.author }}
                                                     </h5>
-                                                </a>
+
                                                 <p class="
                                                     mb-3
                                                     font-normal
                                                     text-gray-700
                                                     dark:text-gray-400
                                                 ">
-                                                    {{ post.hashtags }}
+                                                    {{ post.content }}
                                                 </p>
                                                 <div class="
                                                     flex

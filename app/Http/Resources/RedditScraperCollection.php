@@ -9,7 +9,7 @@ class RedditScraperCollection extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param Request $request
+     * @param \Request $request
      * @return array
      */
     public function toArray($request)

@@ -1,6 +1,5 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import Welcome from '@/Components/Welcome.vue';
 </script>
 
 <template>
@@ -19,6 +18,7 @@ import Welcome from '@/Components/Welcome.vue';
                             <div class="relative overflow-x-auto shadow-md sm:rounded-lg p-5">
                                 <table v-if="accounts.length > 0" class="
                     w-full
+                    rounded-lg
                     text-sm text-left text-gray-500
                     dark:text-gray-400
                 ">

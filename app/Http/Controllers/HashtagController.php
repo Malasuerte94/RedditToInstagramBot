@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\HashtagCollection;
 use App\Models\Hashtag;
+use App\Models\Log;
 use App\Models\User;
+use App\Services\LogService;
 use Illuminate\Http\Request;
 
 class HashtagController extends Controller
@@ -26,48 +28,43 @@ class HashtagController extends Controller
         
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\JsonResponse
     {
         $validated = $request->validate([
             'hashtags' => 'required|string',
             'name' => 'required|string',
         ]);
 
-        Hashtag::create(
+        $created = Hashtag::create(
             [  
                 'user_id' => auth()->user()->id,
                 'name' => $validated['name'],
                 'hashtags' => $validated['hashtags'],
             ]
         );
+
+        LogService::log(
+            [
+                'type' => Log::TYPE_SUCCESS,
+                'model' => Hashtag::class,
+                'model_id' => $created->id,
+                'message' => 'Hashtag created successfully',
+                'data' => json_encode($validated),
+            ]
+        );
+
+        return response()->json([
+            'message' => 'Hashtag created successfully'
+        ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Hashtag  $hashtag
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Hashtag $hashtag)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
