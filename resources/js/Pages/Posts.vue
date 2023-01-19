@@ -1,53 +1,56 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import Welcome from "@/Components/Welcome.vue";
 </script>
 
 <template>
     <AppLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Posts {{ this.$page.props.csrf_token }}
+                Posts
             </h2>
         </template>
-
         <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <template v-if="posts.length > 0">
+            <div v-if="posts" class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <template v-for="(account, index) in posts" :key="index">
+                    <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                        <div>
+                            <h2 class="p-4 font-semibold text-xl text-gray-800 leading-tight">
+                                {{ index }}
+                            </h2>
+                        </div>
                         <div class="p-4">
                             <div class="masonry-with-flex">
-                                <template v-for="post in posts" :key="post.id">
-                                    <div v-if="!post.posted"  class="
+                                <template v-for="post in account" :key="post.id">
+                                    <div  v-if="!post.posted" class="
                                         masonry-cell
                                         bg-white
                                         border border-gray-200
                                         rounded-lg
                                         shadow-md
                                         dark:bg-gray-800 dark:border-gray-700
-                                    ">
-                                        <div class="item">
+                                     " :class="[uploading == post.id ? 'uploading animate-pulse' : '']">
+                                        <div class="item flex flex-col justify-between content-between">
                                             <img class="rounded-t-lg" :src="post.image_url" alt="" />
                                             <div class="p-5">
-                                                <a href="#">
+        
                                                     <h5 class="
                                                         mb-2
-                                                        text-2xl
+                                                        text-2sm
                                                         font-bold
                                                         tracking-tight
                                                         text-gray-900
                                                         dark:text-white
                                                     ">
-                                                        {{ post.author }}
+                                                        Author: {{ post.author }}
                                                     </h5>
-                                                </a>
+
                                                 <p class="
                                                     mb-3
                                                     font-normal
                                                     text-gray-700
                                                     dark:text-gray-400
                                                 ">
-                                                    {{ post.hashtags }}
+                                                    {{ post.content }}
                                                 </p>
                                                 <div class="
                                                     flex
@@ -177,61 +180,11 @@ import Welcome from "@/Components/Welcome.vue";
                                         </div>
                                     </div>
                                 </template>
-
                             </div>
                         </div>
-                    </template>
-                </div>
+                    </div>
+                </template>
             </div>
-        </div>
-
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg p-5">
-            <table v-if="posts.length > 0" class="
-                    w-full
-                    text-sm text-left text-gray-500
-                    dark:text-gray-400
-                ">
-                <thead class="
-                        text-xs text-gray-700
-                        uppercase
-                        bg-gray-50
-                        dark:bg-gray-700 dark:text-gray-400
-                    ">
-                    <tr>
-                        <th scope="col" class="px-6 py-3">#</th>
-                        <th scope="col" class="px-6 py-3">Subreddit</th>
-                        <th scope="col" class="px-6 py-3">Image</th>
-                        <th scope="col" class="px-6 py-3">Author</th>
-                        <th scope="col" class="px-6 py-3">Posted</th>
-                        <th scope="col" class="px-6 py-3">Confirmed</th>
-                        <th scope="col" class="px-6 py-3">Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="
-                            bg-white
-                            border-b
-                            dark:bg-gray-900 dark:border-gray-700
-                        " v-for="post in posts" :key="post.id">
-                        <th class="
-                                px-6
-                                py-4
-                                font-medium
-                                text-gray-900
-                                whitespace-nowrap
-                                dark:text-white
-                            " scope="row">
-                            {{ post.id }}
-                        </th>
-                        <td class="px-6 py-4">{{ post.subreddit }}</td>
-                        <td class="px-6 py-4">{{ post.image_url }}</td>
-                        <td class="px-6 py-4">{{ post.author }}</td>
-                        <td class="px-6 py-4">{{ post.posted }}</td>
-                        <td class="px-6 py-4">{{ post.confirmed }}</td>
-                        <td class="px-6 py-4">{{ post.created_at }}</td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </AppLayout>
 </template>
@@ -241,6 +194,7 @@ export default {
     data() {
         return {
             posts: [],
+            uploading: null,
         };
     },
     mounted() {
@@ -275,9 +229,11 @@ export default {
             }
         },
         async uploadManual(postId) {
+            this.uploading = postId;
             try {
                 await axios.post("/api/posts/upload/", { post_id: postId });
                 this.getPosts();
+                //setTimeout(() => this.uploading = null, 2000);
             } catch (error) {
                 console.error(error);
             }
@@ -297,5 +253,19 @@ export default {
     .item {
         padding: 1rem;
     }
+}
+.masonry-cell {
+    position: relative;
+}
+.uploading::after {
+    content: "";  // :before and :after both require content
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(120deg,#ee44d2,#33d0ff);
+    background-color: #333;
+    opacity: .7;
 }
 </style>

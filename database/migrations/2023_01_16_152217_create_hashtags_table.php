@@ -13,8 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('posts', function (Blueprint $table) {
-            $table->text('hashtags')->after('author')->nullable();
+        Schema::create('hashtags', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->text('hashtags');
+            $table->timestamps();
+            $table->index('user_id');
         });
     }
 
@@ -25,8 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('posts', function (Blueprint $table) {
-            $table->dropColumn('hashtags');
-        });
+        Schema::dropIfExists('hashtags');
     }
 };

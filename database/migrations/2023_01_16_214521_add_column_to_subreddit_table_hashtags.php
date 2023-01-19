@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('posts', function (Blueprint $table) {
-            $table->text('ig_upload_id')->after('confirmed')->nullable();
+        Schema::table('hashtags', function (Blueprint $table) {
+            $table->string('name')->after('user_id')->unique();
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('posts', function (Blueprint $table) {
-            $table->dropColumn('ig_upload_id');
+        Schema::table('hashtags', function (Blueprint $table) {
+            $table->dropColumn('name');
         });
     }
 };

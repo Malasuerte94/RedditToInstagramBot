@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\post;
+use App\Models\User;
 use App\Services\Reddit\RedditService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -15,12 +16,20 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
-       //$acesta = new RedditService();
-        $posts = Post::all();
+
+        /** @var User $user */
+        $user = auth()->user();
+        $igAccounts = $user->igAccounts;
+        $posts = [];
+
+        foreach ($igAccounts as $igAccount) {
+            $posts[$igAccount->username] = $igAccount->posts;
+        }
+
         return response()->json($posts);
     }
 

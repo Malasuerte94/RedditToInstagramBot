@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -56,4 +57,33 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function igAccounts(): HasMany
+    {
+        return $this->hasMany(IgAccount::class);
+    }
+
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
+    }
+    
+    public function hashtags(): HasMany
+    {
+        return $this->hasMany(Hashtag::class);
+    }
+    public function redditScrapers(): HasMany
+    {
+        return $this->hasMany(RedditScraper::class);
+    }
+    public function redditAutomations(): HasMany
+    {
+        return $this->hasMany(RedditAutomation::class);
+    }
+
+    public function instagramAutomations(): HasMany
+    {
+        return $this->hasMany(InstagramAutomation::class);
+    }
+
 }

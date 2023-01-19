@@ -13,25 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create('instagram_automations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('ig_account_id');
             $table->unsignedBigInteger('reddit_scraper_id');
-            $table->unsignedBigInteger('hashtag_id');
-            
-            $table->text('image_url');
-            $table->text('author');
-            $table->text('content')->nullable();
-            $table->boolean('posted')->default(false);
-            $table->boolean('confirmed')->default(false);
-            $table->text('ig_upload_id')->nullable();
+            $table->boolean('active')->default(false);
             $table->timestamps();
 
+            $table->index('user_id');
             $table->index('ig_account_id');
             $table->index('reddit_scraper_id');
-            $table->index('hashtag_id');
-            $table->index('user_id');
         });
     }
 
@@ -42,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('instagram_automations');
     }
 };

@@ -13,9 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->text('account_id')->after('token')->nullable();
-            $table->text('business_id')->after('account_id')->nullable();
+        Schema::table('posts', function (Blueprint $table) {
+            $table->softDeletes();
         });
     }
 
@@ -26,9 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('account_id');
-            $table->dropColumn('business_id');
+        Schema::table('posts', function (Blueprint $table) {
+            $table->dropSoftDeletes();
         });
     }
 };
