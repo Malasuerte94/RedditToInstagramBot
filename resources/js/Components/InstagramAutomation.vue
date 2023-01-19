@@ -14,7 +14,6 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
                     </svg>
                     <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold">
                         <a>Instagram Automation</a>
-                        <button type="button" @click="testPost">test get post</button>
                     </div>
                 </div>
             </div>

@@ -17,7 +17,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        //->hourly();
         $schedule->job(new RedditScrapperJob)->hourly();
         $schedule->job(new InstagramAutomationJob)->hourly();
     }
@@ -30,7 +29,6 @@ class Kernel extends ConsoleKernel
     protected function commands()
     {
         $this->load(__DIR__.'/Commands');
-
         require base_path('routes/console.php');
     }
 }

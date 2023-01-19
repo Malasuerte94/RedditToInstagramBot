@@ -28,7 +28,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
                                         rounded-lg
                                         shadow-md
                                         dark:bg-gray-800 dark:border-gray-700
-                                     " :class="[uploading == post.id ? 'uploading' : '']">
+                                     " :class="[uploading == post.id ? 'uploading animate-pulse' : '']">
                                         <div class="item flex flex-col justify-between content-between">
                                             <img class="rounded-t-lg" :src="post.image_url" alt="" />
                                             <div class="p-5">
