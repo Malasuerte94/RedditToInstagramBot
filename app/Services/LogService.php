@@ -23,13 +23,14 @@ class LogService
      */
     public static function log($data): void
     {
+        var_dump($data);
         Log::create([
-            'type' => $data['type'] ?? null,
-            'model' => $data['model'] ?? null,
+            'type' => $data['type'] ?? '',
+            'model' => $data['model'] ?? '',
             'model_id' => $data['model_id'] ?? null,
-            'message' => $data['message'] ?? [],
-            'data' => $data['data'] ?? [],
-            'exception' => json_encode($data['exception']) ?? [],
+            'message' => $data['message'] ?? '',
+            'data' => $data['data'] ?? '',
+            'exception' => array_key_exists('exception', $data) ? json_encode($data['exception']) : json_encode([]),
         ]);
 
     }
