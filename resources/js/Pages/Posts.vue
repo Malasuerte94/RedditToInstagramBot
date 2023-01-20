@@ -235,6 +235,7 @@ export default {
             try {
                 await axios.post("/api/posts/upload/", { post_id: postId });
                 this.getPosts();
+                this.uploading = null;
             } catch (error) {
                 console.error(error);
             }
