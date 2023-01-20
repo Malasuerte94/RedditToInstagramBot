@@ -10,8 +10,8 @@ import AppLayout from "@/Layouts/AppLayout.vue";
             </h2>
         </template>
         <div class="py-12">
-            <div v-if="posts" class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <template v-for="(account, index) in posts" :key="index">
+            <div v-if="posts && !loading" class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <template v-for="(igAccount, index) in posts" :key="index">
                     <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                         <div>
                             <h2 class="p-4 font-semibold text-xl text-gray-800 leading-tight">
@@ -20,8 +20,8 @@ import AppLayout from "@/Layouts/AppLayout.vue";
                         </div>
                         <div class="p-4">
                             <div class="masonry-with-flex">
-                                <template v-for="post in account" :key="post.id">
-                                    <div  v-if="!post.posted" class="
+                                <template v-for="post in igAccount" :key="post.id">
+                                    <div v-if="!post.posted" class="
                                         masonry-cell
                                         bg-white
                                         border border-gray-200
@@ -32,8 +32,8 @@ import AppLayout from "@/Layouts/AppLayout.vue";
                                         <div class="item flex flex-col justify-between content-between">
                                             <img class="rounded-t-lg" :src="post.image_url" alt="" />
                                             <div class="p-5">
-        
-                                                    <h5 class="
+
+                                                <h5 class="
                                                         mb-2
                                                         text-2sm
                                                         font-bold
@@ -41,8 +41,8 @@ import AppLayout from "@/Layouts/AppLayout.vue";
                                                         text-gray-900
                                                         dark:text-white
                                                     ">
-                                                        Author: {{ post.author }}
-                                                    </h5>
+                                                    Author: {{ post.author }}
+                                                </h5>
 
                                                 <p class="
                                                     mb-3
@@ -143,7 +143,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
                                                             <span class="sr-only">Delete</span>
                                                         </button>
                                                         <button type="button" v-on:click="
-                                                            deletePost(post.id)
+    deletePost(post.id)
                                                         " class="
                                                             text-blue-700
                                                             border
@@ -193,6 +193,7 @@ import axios from "axios";
 export default {
     data() {
         return {
+            loading: true,
             posts: [],
             uploading: null,
         };
@@ -205,6 +206,7 @@ export default {
             try {
                 const response = await axios.get("/api/posts");
                 this.posts = response.data;
+                this.loading = false;
             } catch (error) {
                 console.error(error);
             }
@@ -233,7 +235,6 @@ export default {
             try {
                 await axios.post("/api/posts/upload/", { post_id: postId });
                 this.getPosts();
-                //setTimeout(() => this.uploading = null, 2000);
             } catch (error) {
                 console.error(error);
             }
@@ -254,17 +255,19 @@ export default {
         padding: 1rem;
     }
 }
+
 .masonry-cell {
     position: relative;
 }
+
 .uploading::after {
-    content: "";  // :before and :after both require content
+    content: ""; // :before and :after both require content
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: linear-gradient(120deg,#ee44d2,#33d0ff);
+    background-image: linear-gradient(120deg, #ee44d2, #33d0ff);
     background-color: #333;
     opacity: .7;
 }

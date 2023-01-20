@@ -5,7 +5,7 @@ namespace App\Services\Reddit;
 use App\Models\Hashtag;
 use App\Models\IgAccount;
 use App\Models\Log;
-use App\Models\post;
+use App\Models\Post;
 use App\Models\RedditAutomation;
 use App\Models\RedditScraper;
 use App\Services\Instagram\InstagramTool;
