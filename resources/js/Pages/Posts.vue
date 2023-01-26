@@ -6,12 +6,12 @@ import AppLayout from "@/Layouts/AppLayout.vue";
     <AppLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Posts
+                Posts Scraped
             </h2>
         </template>
         <div class="py-12">
             <div v-if="posts && !loading" class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <template v-for="(igAccount, index) in posts" :key="index">
+                <template v-for="(existingUserAc, index) in posts" :key="index">
                     <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                         <div>
                             <h2 class="p-4 font-semibold text-xl text-gray-800 leading-tight">
@@ -20,7 +20,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
                         </div>
                         <div class="p-4">
                             <div class="masonry-with-flex">
-                                <template v-for="post in igAccount" :key="post.id">
+                                <template v-for="post in existingUserAc" :key="post.id">
                                     <div v-if="!post.posted" class="
                                         masonry-cell
                                         bg-white
@@ -66,7 +66,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
                                                         rounded
                                                         dark:border-gray-700
                                                     ">
-                                                        <input v-on:change="
+                                                        <input @change="
                                                             updatePost(
                                                                 post.id,
                                                                 $event
@@ -107,7 +107,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
                                                     </div>
 
                                                     <div>
-                                                        <button type="button" v-on:click="
+                                                        <button type="button" @click="
                                                             uploadManual(
                                                                 post.id
                                                             )
@@ -142,7 +142,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 
                                                             <span class="sr-only">Delete</span>
                                                         </button>
-                                                        <button type="button" v-on:click="
+                                                        <button type="button" @click="
     deletePost(post.id)
                                                         " class="
                                                             text-blue-700
