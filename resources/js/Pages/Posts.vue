@@ -19,7 +19,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
                             </h2>
                         </div>
                         <div class="p-4">
-                            <div class="masonry-with-flex">
+                            <div class="masonry-with-flex" v-if="existingUserAc">
                                 <template v-for="post in existingUserAc" :key="post.id">
                                     <div v-if="!post.posted" class="
                                         masonry-cell
