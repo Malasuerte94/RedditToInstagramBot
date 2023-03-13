@@ -233,7 +233,7 @@ export default {
         async uploadManual(postId) {
             this.uploading = postId;
             try {
-                await axios.post("/api/posts/upload/", { post_id: postId });
+                await axios.post("/api/posts/upload", { post_id: postId });
                 this.getPosts();
                 this.uploading = null;
             } catch (error) {

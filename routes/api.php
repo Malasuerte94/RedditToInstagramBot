@@ -27,12 +27,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-// //@TODO Still wokring on this
-// Route::post('/job/reddit/start', [JobsController::class, 'startRedditScrapperJob']);
-// Route::post('/job/reddit/stop', [JobsController::class, 'stopRedditScrapperJob']);
-
-
-
 //posts
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/posts', [PostController::class, 'index']);
