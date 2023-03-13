@@ -40,5 +40,5 @@ class Post extends Model
     public function scopeNotPosted($query)
     {
         $query->where('posted', 0);
-    }
+    } 
 }
