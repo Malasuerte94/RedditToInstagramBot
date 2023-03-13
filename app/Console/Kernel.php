@@ -21,9 +21,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('queue:work --stop-when-empty')
             ->everyMinute()
             ->withoutOverlapping();
+            
+        // uncomment this line to see if the scheduler is working
+        //$schedule->call(function () {Log::info('Working');})->everyMinute();
 
-        $schedule->call(function () {Log::info('Working');})->everyMinute();
-        
         $schedule->job(new RedditScrapperJob)->hourly();
         $schedule->job(new InstagramAutomationJob)->hourly();
     }
