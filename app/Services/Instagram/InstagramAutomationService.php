@@ -30,11 +30,11 @@ class InstagramAutomationService
                     'type' => Log::TYPE_ERROR,
                     'model' => InstagramService::class,
                     'message' => 'Cant upload post to instagram',
-                    'data' => [
+                    'data' => json_encode([
                         'post_id' => $post->id,
                         'ig_account_id' => $instagramAutomation->ig_account_id,
                         'reddit_scraper_id' => $instagramAutomation->reddit_scraper_id,
-                    ],
+                    ]),
                     'exception' => json_encode($e),
                 ]);
                 continue;

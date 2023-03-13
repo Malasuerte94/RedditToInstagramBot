@@ -93,9 +93,9 @@ class InstagramService
                 'model' => Post::class,
                 'model_id' => $post->id,
                 'message' => 'There was an error uploading media to ig from link.',
-                'data' => [
+                'data' => json_encode([
                     'post_id' => $post->id,
-                ],
+                ]),
                 'exception' => $e->getMessage(),
             ]);
             throw new \Exception('Error uploading media from link.');
@@ -113,9 +113,9 @@ class InstagramService
                 'model' => Post::class,
                 'model_id' => $post->id,
                 'message' => 'There was an error getting the media id.',
-                'data' => [
+                'data' => json_encode([
                     'post_id' => $post->id,
-                ],
+                ]),
             ]);
             throw new \Exception('Error uploading media.');
         }
@@ -146,9 +146,9 @@ class InstagramService
                 'model' => Post::class,
                 'model_id' => $post->id,
                 'message' => 'There was an error publishing media to ig.',
-                'data' => [
+                'data' => json_encode([
                     'post_id' => $post->id,
-                ],
+                ]),
                 'exception' => $e->getMessage(),
             ]);
             throw new \Exception('Error publishing media.');
@@ -166,9 +166,9 @@ class InstagramService
                 'model' => Post::class,
                 'model_id' => $post->id,
                 'message' => 'There was an error getting the media id.',
-                'data' => [
+                'data' => json_encode([
                     'post_id' => $post->id,
-                ],
+                ]),
             ]);
             throw new \Exception('Error uploading media.');
         }
@@ -192,9 +192,9 @@ class InstagramService
                 'model' => Post::class,
                 'model_id' => $post->id,
                 'message' => 'Instagram post uploaded & published',
-                'data' => [
+                'data' => json_encode([
                     'ig_id' => $publishMedia,
-                ],
+                ]),
             ]);
             return response()->json([
                 'message' => 'Instagram post uploaded & published',
@@ -227,9 +227,9 @@ class InstagramService
                 'model' => Post::class,
                 'model_id' => $postId,
                 'message' => $exceptionMessage,
-                'data' => [
+                'data' => json_encode([
                     'post_id' => $postId,
-                ],
+                ]),
                 'exception' => $e->getMessage(),
             ]);
             throw new \Exception($exceptionMessage);
