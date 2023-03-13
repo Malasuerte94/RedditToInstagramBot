@@ -23,14 +23,6 @@ class LogService
      */
     public static function log($data): void
     {
-        Log::create([
-            'type' => $data['type'] ?? '',
-            'model' => $data['model'] ?? '',
-            'model_id' => $data['model_id'] ?? null,
-            'message' => $data['message'] ?? '',
-            'data' => $data['data'] ?? '',
-            'exception' => array_key_exists('exception', $data) ? json_encode($data['exception']) : json_encode([]),
-        ]);
-
+        Log::create($data);
     }
 }

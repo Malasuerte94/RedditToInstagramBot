@@ -15,12 +15,12 @@ return new class extends Migration
     {
         Schema::create('logs', function (Blueprint $table) {
             $table->id();
-            $table->string('type');
-            $table->text('model');
+            $table->string('type')->nullable();
+            $table->text('model')->nullable();
             $table->unsignedBigInteger('model_id')->nullable();
-            $table->text('message');
-            $table->text('data');
-            $table->json('exception');
+            $table->text('message')->nullable();
+            $table->text('data')->nullable();
+            $table->json('exception')->nullable();
 
             $table->timestamps();
             $table->index('model_id');
