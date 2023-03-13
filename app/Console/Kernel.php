@@ -23,7 +23,7 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping();
 
         $schedule->call(function () {Log::info('Working');})->everyMinute();
-            
+        
         $schedule->job(new RedditScrapperJob)->hourly();
         $schedule->job(new InstagramAutomationJob)->hourly();
     }
