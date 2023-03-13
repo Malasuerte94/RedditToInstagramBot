@@ -40,6 +40,7 @@ class IgAccountController extends Controller
         /** @var User $user */
         $user = auth()->user();
         $igAccounts = $user->igAccounts;
+        $this->instagramService = new InstagramService();
         $accountIdAndUsername = $this->instagramService->getAccountId();
         $igBusinessAccountId = $this->instagramService->getIgBusinessAccountId($accountIdAndUsername['id']);
 

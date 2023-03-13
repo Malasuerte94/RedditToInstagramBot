@@ -23,7 +23,6 @@ class LogService
      */
     public static function log($data): void
     {
-        var_dump($data);
         Log::create([
             'type' => $data['type'] ?? '',
             'model' => $data['model'] ?? '',
