@@ -32,10 +32,29 @@ class InstagramAutomationService
                 ->first();
 
             if (!$post) {
+                LogService::log([
+                    'type' => Log::TYPE_INFO,
+                    'model' => InstagramService::class,
+                    'message' => 'No post to upload',
+                    'data' => json_encode([
+                        'ig_account_id' => $instagramAutomation->ig_account_id,
+                        'reddit_scraper_id' => $instagramAutomation->reddit_scraper_id,
+                    ]),
+                ]);
                 continue;
             }
 
             try {
+                LogService::log([
+                    'type' => Log::TYPE_INFO,
+                    'model' => InstagramService::class,
+                    'message' => 'Trying to upload post',
+                    'data' => json_encode([
+                        'post_id' => $post->id,
+                        'ig_account_id' => $instagramAutomation->ig_account_id,
+                        'reddit_scraper_id' => $instagramAutomation->reddit_scraper_id,
+                    ]),
+                ]);
                 InstagramService::uploadPostToInstagram($post);
             } catch (\Exception $e) {
                 LogService::log([
