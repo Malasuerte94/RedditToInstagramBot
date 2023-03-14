@@ -14,7 +14,7 @@ class RedditRunJobCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'reddit:run';
 
     /**
      * The console command description.
