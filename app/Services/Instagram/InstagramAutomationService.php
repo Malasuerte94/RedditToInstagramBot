@@ -6,20 +6,32 @@ use App\Models\InstagramAutomation;
 use App\Models\Log;
 use App\Models\Post;
 use App\Services\LogService;
+use Carbon\Carbon;
 
 class InstagramAutomationService
 {
     public function startUploading()
     {
+
         $instagramAutomations = InstagramAutomation::where('active', true)->get();
+
+        LogService::log([
+            'type' => Log::TYPE_INFO,
+            'model' => InstagramService::class,
+            'message' => 'Start uploading - Active: ' . $instagramAutomations->count(),
+            'data' => json_encode(Carbon::now()),
+        ]);
 
         foreach ($instagramAutomations as $instagramAutomation) {
             $post = Post::where([
                 'ig_account_id' => $instagramAutomation->ig_account_id,
                 'reddit_scraper_id' => $instagramAutomation->reddit_scraper_id,
-            ])->notPosted()->confirmed()->first();
+            ])
+                ->notPosted()
+                ->confirmed()
+                ->first();
 
-            if(!$post) {
+            if (!$post) {
                 continue;
             }
 

@@ -43,6 +43,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //upload manualy to instagram
     Route::post('/posts/upload', [InstagramController::class, 'postInstagramMedia']);
+    
+    //start job manualy to instagram
+    Route::post('/start-ig-job-once', [InstagramController::class, 'startManualJob']);
 
     //reddit scraper
     Route::get('/reddit-scrapers', [RedditScraperController::class, 'index']);

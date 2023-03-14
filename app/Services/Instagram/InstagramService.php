@@ -2,11 +2,10 @@
 
 namespace App\Services\Instagram;
 
-use App\Models\InstagramAutomation;
 use App\Models\Log;
 use App\Models\Post;
-use App\Models\User;
 use App\Services\LogService;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Client;
 
 class InstagramService
@@ -76,8 +75,15 @@ class InstagramService
      */
     public static function uploadMedia(Post $post): string
     {
+        LogService::log([
+            'type' => Log::TYPE_SUCCESS,
+            'model' => Post::class,
+            'model_id' => $post->id,
+            'message' => '2. UPLOADING MEDIA TO INSTAGRAM',
+        ]);
+
         $client = new Client();
-        $user = auth()->user();
+        $user = $post->user;
 
         try {
             $response = $client->post('https://graph.facebook.com/v15.0/' . $post->igAccount->business_id . '/media', [
@@ -87,7 +93,16 @@ class InstagramService
                     'access_token' => $user->token,
                 ],
             ]);
-        } catch (\Exception $e) {
+        } catch (RequestException $e) {
+
+            $response = $e->getResponse()->getStatusCode();
+            $body = $e->getResponse()->getBody();
+            $message = json_decode($body, true)['error']['message'];
+
+            if ($response === 400) {
+                $post->delete();
+            }
+
             LogService::log([
                 'type' => Log::TYPE_ERROR,
                 'model' => Post::class,
@@ -96,7 +111,7 @@ class InstagramService
                 'data' => json_encode([
                     'post_id' => $post->id,
                 ]),
-                'exception' => $e->getMessage(),
+                'exception' => json_encode($message),
             ]);
             throw new \Exception('Error uploading media from link.');
         }
@@ -127,8 +142,15 @@ class InstagramService
      */
     public static function publishMedia(Post $post): string
     {
+        LogService::log([
+            'type' => Log::TYPE_SUCCESS,
+            'model' => Post::class,
+            'model_id' => $post->id,
+            'message' => '2. PUBLISH MEDIA TO INSTAGRAM',
+        ]);
+
         $client = new Client();
-        $user = auth()->user();
+        $user = $post->user;
 
         try {
             $response = $client->post(
@@ -149,7 +171,7 @@ class InstagramService
                 'data' => json_encode([
                     'post_id' => $post->id,
                 ]),
-                'exception' => $e->getMessage(),
+                'exception' => json_encode($e->getMessage()),
             ]);
             throw new \Exception('Error publishing media.');
         }
@@ -180,6 +202,13 @@ class InstagramService
      */
     public static function uploadPostToInstagram(Post $post)
     {
+        LogService::log([
+            'type' => Log::TYPE_SUCCESS,
+            'model' => Post::class,
+            'model_id' => $post->id,
+            'message' => '1. START UPLOADING POST TO INSTAGRAM',
+        ]);
+
         $uploadMedia = self::uploadMedia($post);
 
         if ($uploadMedia) {
@@ -212,9 +241,14 @@ class InstagramService
         ]);
     }
 
-
-    //@TOTO - refactor this to use the requestMake function
-    public function requestMake($method, $url, $data = [], $headers = [], $postId, $exceptionMessage = 'Error making request.') {
+    public function requestMake(
+        $method,
+        $url,
+        $data = [],
+        $headers = [],
+        $postId,
+        $exceptionMessage = 'Error making request.'
+    ) {
         $client = new Client();
         try {
             $response = $client->request($method, $url, [
@@ -230,7 +264,7 @@ class InstagramService
                 'data' => json_encode([
                     'post_id' => $postId,
                 ]),
-                'exception' => $e->getMessage(),
+                'exception' => json_encode($e->getMessage()),
             ]);
             throw new \Exception($exceptionMessage);
         }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\InstagramAutomationJob;
 use App\Models\Post;
 use App\Models\User;
 use App\Services\Instagram\InstagramService;
@@ -19,5 +20,10 @@ class InstagramController extends Controller
         $post = Post::findOrfail($request->post_id);
         $this->instagramService->uploadPostToInstagram($post);
 
+    }
+
+    public function startManualJob()
+    {
+        InstagramAutomationJob::dispatch();
     }
 }

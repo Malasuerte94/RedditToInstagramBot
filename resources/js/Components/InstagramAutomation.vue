@@ -200,10 +200,10 @@ export default {
                 this.errors = error.response.data.errors;
             }
         },
-        async testPost() {
+        async startManualScrape() {
             try {
-                console.log('STARTING TEST');
-                const response = await axios.get('/api/instagram-automation/get-post/test');
+                console.log('STARTING MANUAL JOB');
+                const response = await axios.post('/api/start-ig-job-once');
                 console.log(response);
             } catch (error) {
                 console.error(error);
