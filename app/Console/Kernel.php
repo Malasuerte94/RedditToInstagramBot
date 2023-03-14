@@ -18,15 +18,16 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('queue:work --stop-when-empty')
-            ->everyMinute()
-            ->withoutOverlapping();
+        // $schedule->command('queue:work --stop-when-empty')
+        //     ->everyMinute()
+        //     ->withoutOverlapping();
             
         // uncomment this line to see if the scheduler is working
         //$schedule->call(function () {Log::info('Working');})->everyMinute();
 
-        $schedule->job(new RedditScrapperJob)->hourly();
-        $schedule->job(new InstagramAutomationJob)->hourly();
+        // uncomment this line to run the job every 5 minutes
+        //$schedule->job(new RedditScrapperJob)->hourly();
+        //$schedule->job(new InstagramAutomationJob)->everyFiveMinutes();
     }
 
     /**
