@@ -35,7 +35,7 @@ class InstagramAutomationService
                 LogService::log([
                     'type' => Log::TYPE_INFO,
                     'model' => InstagramService::class,
-                    'message' => 'No post to upload',
+                    'message' => 'No post to upload!',
                     'data' => json_encode([
                         'ig_account_id' => $instagramAutomation->ig_account_id,
                         'reddit_scraper_id' => $instagramAutomation->reddit_scraper_id,
